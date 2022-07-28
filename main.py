@@ -33,6 +33,7 @@ RESTART_FONT = pygame.font.Font("font/Pixeltype.ttf", 25)
 score = 0
 game_active = True
 start_time = 0
+speed = 6
 
 # Music
 background_music = pygame.mixer.Sound("audio/music.wav")
@@ -63,10 +64,11 @@ restart_rect = restart_surf.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer, 1500)
+pygame.time.set_timer(obstacle_timer, 1000)
 
 # Add speed
-
+obstacle_speed = pygame.USEREVENT + 2
+pygame.time.set_timer(obstacle_speed, 5000)
 
 while True:
     # Events
@@ -78,7 +80,12 @@ while True:
         if game_active:
             if event.type == obstacle_timer:
                 obstacle_item = ["fly", "snail", "snail", "snail"]
-                obstacle_group.add(Obstacle(random.choice(obstacle_item)))
+                obstacle_group.add(Obstacle(random.choice(obstacle_item), speed))
+
+            if event.type == obstacle_speed:
+                speed += 1
+                print(speed)
+
         else:
             if event.type == pygame.KEYDOWN and (event.key == pygame.K_r or event.key == pygame.K_SPACE):
                 game_active = True
@@ -103,7 +110,7 @@ while True:
     else:
         screen.blit(game_over_surf, game_over_rect)
         screen.blit(restart_surf, restart_rect)
-        player_gravity = 0
+        speed = 0
 
     pygame.display.update()
     clock.tick(FPS)

@@ -6,7 +6,7 @@ from random import Random
 
 
 class Obstacle(Sprite):
-    def __init__(self, type):
+    def __init__(self, type, speed):
         super().__init__()
         if type == "snail":
             snail_frame_1 = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
@@ -24,6 +24,8 @@ class Obstacle(Sprite):
         self.image = self.frames[self.animation_index]
         self.rect = self.image.get_rect(midbottom=(random.randint(900, 1100), y_pos))
 
+        self.speed = float(speed)
+
     def animation_state(self):
         self.animation_index += 0.1
         if self.animation_index >= len(self.frames):
@@ -33,7 +35,7 @@ class Obstacle(Sprite):
 
     def update(self):
         self.animation_state()
-        self.rect.x -= 6
+        self.rect.x -= self.speed
         self.destroy()
 
     def destroy(self):
